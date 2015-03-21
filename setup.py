@@ -10,5 +10,5 @@ setup(
     author_email='example@example.com',
     url='http://www.python.org/sigs/distutils-sig/',
     # update required django version:
-    install_requires=['Django=1.7'],
+    install_requires=['Django<=1.8'],
 )
