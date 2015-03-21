@@ -12,16 +12,34 @@ changing any of it's tag letters (# GETTING-STARTED:) or just delete it.
 # GETTING-STARTED: make sure to run the getting-started.py script when you start a new project or deploy one.
 # Now hide it again by adding the '#' back.
 
-def find_getting_started_comments(path, prefix=''):
-    for root, subdirectories, files in os.walk(path):
-        for f in files:
-            line_counter = 1
-            relative_file = os.path.join(root, f)
-            for line in open(relative_file):
-                line = line.strip()
-                if line.startswith(prefix + "# GETTING-STARTED:"):
-                    yield (relative_file, line_counter, line)
-                line_counter += 1
+class GettingStartedManager:
+    FORMAT = "# GETTING-STARTED:"
+
+
+    def __init__(self, change=False, hidden=False, hide_all=False, unhide_all=False,
+            remove_un_hidden=False, remove_hidden=False, remove_all=False path='.'):
+        """Create a new GettingStartedManager, targeting the given path."""
+        self._change = change
+        self._hidden = hidden
+        self._hide_all = hide_all
+        self._unhide_all = unhide_all
+        self._remove_un_hidden = remove_un_hidden
+        self._remove_hidden = remove_hidden
+        self._remove_all = remove_all
+        self._path = path
+
+    @staticmethod
+    def find_getting_started_comments(path, prefix=''):
+        for root, subdirectories, files in os.walk(path):
+            for f in files:
+                line_counter = 1
+                relative_file = os.path.join(root, f)
+                for line in open(relative_file):
+                    line = line.strip()
+                    if line.startswith(prefix + "# GETTING-STARTED:"):
+                        yield (relative_file, line_counter, line)
+                    line_counter += 1
+
 
 
 if __name__ == "__main__":
@@ -127,6 +145,3 @@ options:
                     lines[change[0]-1] = change[1] + "\n"
             with open(path, 'w') as f:
                 f.writelines(lines)
-
-    if remove_all:
-        passhn
