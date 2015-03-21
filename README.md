@@ -1,9 +1,14 @@
+#######################################################
+forked from https://github.com/openshift/django-example
+#######################################################
+
+
 Django on OpenShift
 ===================
 
 This git repository helps you get up and running quickly w/ a Django
 installation on OpenShift.  The Django project name used in this repo
-is 'openshift' but you can feel free to change it.  Right now the
+is 'myproject' but you can feel free to change it.  Right now the
 backend is sqlite3 and the database runtime is found in
 `$OPENSHIFT_DATA_DIR/sqlite3.db`.
 
