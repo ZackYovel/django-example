@@ -6,6 +6,7 @@
 
 source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
 
+# GETTING-STARTED: change 'db.sqlite3' to your sqlite3 database:
 if [ ! -f $OPENSHIFT_DATA_DIR/db.sqlite3 ]
 then
     # GETTING-STARTED: change 'myproject' to your project name and 'db.sqlite3' to the name of your sqlite3 database:

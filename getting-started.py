@@ -16,8 +16,8 @@ class GettingStartedManager:
     FORMAT = "# GETTING-STARTED:"
 
 
-    def __init__(self, change=False, hidden=False, hide_all=False, unhide_all=False,
-            remove_un_hidden=False, remove_hidden=False, remove_all=False path='.'):
+    def __init__(self, change=False, hidden=False, select_all=False, hide_all=False, unhide_all=False,
+            remove_un_hidden=False, remove_hidden=False, remove_all=False paths=('.'), prefix='#'):
         """Create a new GettingStartedManager, targeting the given path."""
         self._change = change
         self._hidden = hidden
@@ -26,25 +26,32 @@ class GettingStartedManager:
         self._remove_un_hidden = remove_un_hidden
         self._remove_hidden = remove_hidden
         self._remove_all = remove_all
-        self._path = path
+        self._paths = paths
 
-    @staticmethod
-    def find_getting_started_comments(path, prefix=''):
-        for root, subdirectories, files in os.walk(path):
-            for f in files:
-                line_counter = 1
-                relative_file = os.path.join(root, f)
-                for line in open(relative_file):
-                    line = line.strip()
-                    if line.startswith(prefix + "# GETTING-STARTED:"):
-                        yield (relative_file, line_counter, line)
-                    line_counter += 1
+        # general cases
+        self._select_all = select_all or remove_all
+        self._hidden_args = hidden or unhide_all or remove_hidden
 
+        # formats to use (hidden and unhidden)
+        self._formats = (
+            self.FORMAT if select_all or not hidden_args,
+            prefix + self.FORMAT if select_all or hidden_args
+        )
+
+
+    def search(self):
+        for f in (root, s, files in os.walk(path) for path in self._paths):
+            line_counter = 1
+            relative_file = os.path.join(root, f)
+            for line in open(relative_file):
+                line = line.strip()
+                if line.startswith(fmt for fmt in self._formats):
+                    yield (relative_file, line_counter, line)
+                line_counter += 1
 
 
 if __name__ == "__main__":
     from sys import argv
-    import re
 
     USAGE ="""
 usage: getting-started.py [arg1[ arg2]]
@@ -78,11 +85,16 @@ options:
         the -h or --hidden flags are present)
 """
 
-    change_mode = False
-    hidden_mode = False
-    hide_all = False
-    unhide_all = False
-    remove_all = False
+    change=False
+    hidden=False
+    select_all=False
+    hide_all=False
+    unhide_all=False,
+    # remove_un_hidden=False
+    # remove_hidden=False
+    remove_all=False
+    # paths=('.')
+    # prefix='#'
 
     for arg in argv:
         if arg.endswith('getting-started.py'):
@@ -93,55 +105,57 @@ options:
             hide_all = True
         elif arg in ('-ua', '--unhide-all'):
             unhide_all = True
+        elif arg in ('-sa', '--select_all'):
+            select_all = True
         elif arg in ('-h', '--hidden'):
-            hidden_mode = True
+            hidden = True
         elif arg in ('-c','--chage'):
-            change_mode = True
+            change = True
         else:
             print USAGE
             exit(0)
 
-    all_mode = remove_all or hide_all or unhide_all
+    # all_mode = remove_all or hide_all or unhide_all
 
-    # (un)hide-all=True impicitly means change_mode=True, but not the other way.
-    if all_mode:
-        change_mode = True
+    # # (un)hide-all=True impicitly means change_mode=True, but not the other way.
+    # if all_mode:
+    #     change_mode = True
 
-    files = {}
+    # files = {}
 
-    prefix = '#' if hidden_mode or unhide_all else ''
-    for relative_file, line_number, line in find_getting_started_comments('.', prefix):
-        if not all_mode:
-            print(relative_file + " line " + str(line_number) + ":\n" + line)
+    # prefix = '#' if hidden_mode or unhide_all else ''
+    # for relative_file, line_number, line in find_getting_started_comments('.', prefix):
+    #     if not all_mode:
+    #         print(relative_file + " line " + str(line_number) + ":\n" + line)
 
-        if not all_mode:
-            if change_mode:
-                if hidden_mode:
-                    action = raw_input("skip/un-hide/remove? [skip]:")
-                else:
-                    action = raw_input("skip/hide/remove? [skip]:")
-            else:
-                action = raw_input("next?")
+    #     if not all_mode:
+    #         if change_mode:
+    #             if hidden_mode:
+    #                 action = raw_input("skip/un-hide/remove? [skip]:")
+    #             else:
+    #                 action = raw_input("skip/hide/remove? [skip]:")
+    #         else:
+    #             action = raw_input("next?")
 
-        if change_mode:
-            if not relative_file in files:
-                files[relative_file] = []
-            if unhide_all or not all_mode and action in {'u', 'un-hide', 'unhide', "un hide"}:
-                change = line[1:]
-            elif hide_all or not all_mode and action in {'hide', 'h'}:
-                change = '#' + line
-            elif remove_all or not all_mode and action in {'r', 'remove'}:
-                change = ''
-            else:
-                print "unknowen action: " + action
-            files[relative_file] += [(line_number, change)]
+    #     if change_mode:
+    #         if not relative_file in files:
+    #             files[relative_file] = []
+    #         if unhide_all or not all_mode and action in {'u', 'un-hide', 'unhide', "un hide"}:
+    #             change = line[1:]
+    #         elif hide_all or not all_mode and action in {'hide', 'h'}:
+    #             change = '#' + line
+    #         elif remove_all or not all_mode and action in {'r', 'remove'}:
+    #             change = ''
+    #         else:
+    #             print "unknowen action: " + action
+    #         files[relative_file] += [(line_number, change)]
 
-    if change_mode:
-        for path in files:
-            changes = files[path]
-            with open(path) as f:
-                lines = f.readlines()
-                for change in changes:
-                    lines[change[0]-1] = change[1] + "\n"
-            with open(path, 'w') as f:
-                f.writelines(lines)
+    # if change_mode:
+    #     for path in files:
+    #         changes = files[path]
+    #         with open(path) as f:
+    #             lines = f.readlines()
+    #             for change in changes:
+    #                 lines[change[0]-1] = change[1] + "\n"
+    #         with open(path, 'w') as f:
+    #             f.writelines(lines)
