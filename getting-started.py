@@ -54,19 +54,26 @@ options:
 
     -ua --unhide-all
         search and unhide all hidden comments, do not prompt user.
+
+    -ra --remove-all
+        search and remove all comments (or all hidden comments if
+        the -h or --hidden flags are present)
 """
 
     change_mode = False
     hidden_mode = False
     hide_all = False
     unhide_all = False
+    remove_all = False
 
     for arg in argv:
         if arg.endswith('getting-started.py'):
             pass
-        elif arg in ('-ha', '--hide_all'):
+        elif arg in ('-ra', '--remove-all'):
+            remove_all = True
+        elif arg in ('-ha', '--hide-all'):
             hide_all = True
-        elif arg in ('-ua', '--unhide_all'):
+        elif arg in ('-ua', '--unhide-all'):
             unhide_all = True
         elif arg in ('-h', '--hidden'):
             hidden_mode = True
@@ -76,7 +83,7 @@ options:
             print USAGE
             exit(0)
 
-    all_mode = hide_all or unhide_all
+    all_mode = remove_all or hide_all or unhide_all
 
     # (un)hide-all=True impicitly means change_mode=True, but not the other way.
     if all_mode:
@@ -92,19 +99,21 @@ options:
         if not all_mode:
             if change_mode:
                 if hidden_mode:
-                    action = raw_input("skip/un-hide? [skip]:")
+                    action = raw_input("skip/un-hide/remove? [skip]:")
                 else:
-                    action = raw_input("skip/hide? [skip]:")
+                    action = raw_input("skip/hide/remove? [skip]:")
             else:
                 action = raw_input("next?")
 
         if change_mode:
             if not relative_file in files:
                 files[relative_file] = []
-            if unhide_all or not all_mode and action in {'u', 'un-hide', 'unhide'}:
+            if unhide_all or not all_mode and action in {'u', 'un-hide', 'unhide', "un hide"}:
                 change = line[1:]
             elif hide_all or not all_mode and action in {'hide', 'h'}:
-                change = ('#' + line)
+                change = '#' + line
+            elif remove_all or not all_mode and action in {'r', 'remove'}:
+                change = ''
             else:
                 print "unknowen action: " + action
             files[relative_file] += [(line_number, change)]
@@ -118,3 +127,6 @@ options:
                     lines[change[0]-1] = change[1] + "\n"
             with open(path, 'w') as f:
                 f.writelines(lines)
+
+    if remove_all:
+        passhn

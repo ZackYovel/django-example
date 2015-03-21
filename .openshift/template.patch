@@ -4,16 +4,21 @@ Date: Mon, 23 Jul 2012 11:05:13 -0400
 Subject: [PATCH] Added changes to templatize the quick start.
 
 ---
- wsgi/openshift/openshiftlibs.py |   81 +++++++++++++++++++++++++++++++++++++++
- wsgi/openshift/settings.py      |   14 ++++++-
+ # GETTING-STARTED: change 'myproject' to your project name:
+ wsgi/myproject/openshiftlibs.py |   81 +++++++++++++++++++++++++++++++++++++++
+ # GETTING-STARTED: change 'myproject' to your project name:
+ wsgi/myproject/settings.py      |   14 ++++++-
  2 files changed, 93 insertions(+), 2 deletions(-)
- create mode 100644 wsgi/openshift/openshiftlibs.py
+ # GETTING-STARTED: change 'myproject' to your project name:
+ create mode 100644 wsgi/myproject/openshiftlibs.py
 
-diff --git a/wsgi/openshift/openshiftlibs.py b/wsgi/openshift/openshiftlibs.py
+# GETTING-STARTED: change 'myproject' to your project name:
+diff --git a/wsgi/myproject/openshiftlibs.py b/wsgi/myproject/openshiftlibs.py
 new file mode 100644
 index 0000000..a11e0e5
 --- /dev/null
-+++ b/wsgi/openshift/openshiftlibs.py
+# GETTING-STARTED: change 'myproject' to your project name:
++++ b/wsgi/myproject/openshiftlibs.py
 @@ -0,0 +1,81 @@
 +#!/usr/bin/env python
 +import hashlib, inspect, os, random, sys
@@ -96,10 +101,13 @@ index 0000000..a11e0e5
 +
 +	# Set the value
 +	return rand_key
-diff --git a/wsgi/openshift/settings.py b/wsgi/openshift/settings.py
+# GETTING-STARTED: change 'myproject' to your project name:
+diff --git a/wsgi/myproject/settings.py b/wsgi/myproject/settings.py
 index 842669e..2f44079 100644
---- a/wsgi/openshift/settings.py
-+++ b/wsgi/openshift/settings.py
+# GETTING-STARTED: change 'myproject' to your project name:
+--- a/wsgi/myproject/settings.py
+# GETTING-STARTED: change 'myproject' to your project name:
++++ b/wsgi/myproject/settings.py
 @@ -1,6 +1,6 @@
  # -*- coding: utf-8 -*-
  # Django settings for OpenShift project.
