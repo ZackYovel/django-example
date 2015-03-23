@@ -4,6 +4,9 @@
 # up again.  This script gets executed directly, so it could be python, php,
 # ruby, etc.
 
+# GETTING-STARTED: remove the 'exit()' call after creating a new django project in the wsgi folder:
+exit()
+
 source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
 
 # GETTING-STARTED: change 'db.sqlite3' to your sqlite3 database:
