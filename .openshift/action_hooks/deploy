@@ -5,8 +5,7 @@
 # ruby, etc.
 
 # 'trying' the entire module, since this adapter version of the
-try:
-
+{
     source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
 
     # GETTING-STARTED: change 'db.sqlite3' to your sqlite3 database:
@@ -29,5 +28,6 @@ try:
     # GETTING-STARTED: change 'myproject' to your project name:
     python "$OPENSHIFT_REPO_DIR"wsgi/myproject/manage.py collectstatic --noinput
 
-except:
-    pass
+} || {
+    echo "If you see this, the 'deploy' action hook couldn't find a django installation. Please install django and check the 'deploy' action hook to see that you have all the required files."
+}
